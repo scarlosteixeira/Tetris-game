@@ -1,64 +1,74 @@
 // * html variables
-const canvas = document.getElementById("main-game")
-const ctx = canvas.getContext("2d")
+const canvas = document.querySelector('#main-game')
+const ctx = canvas.getContext('2d')
 
+const pixelSize = 32 // this is the width and height in px for draw each tetromino single square.
 
-const pixelSize = 32 // this is the width and height in px for draw each tetromino single square.  
 const playableArray = []
-let frameCount = null;  // keep track of the animation frame so we can cancel it
-let gameOver = false;
-let count = 0;
-const tetrominosOptions = [ "i", "l", "o", "s", "t" ]
-const tetrominos = {
-  "i": {
+const frameCount = null
+const count = 0
+const gameOver = false
+const nextPieces = []
+const tetrominosArray = ['i', 'l', 'o', 's', 't'] // list all possible tetrominos options 
+const tetrominos = { //tetrominos obj
+  i: {
     shape: [
-      [0,0,0,0],
-      [1,1,1,1],
-      [0,0,0,0],
-      [0,0,0,0]
+      [0, 0, 0, 0],
+      [1, 1, 1, 1],
+      [0, 0, 0, 0],
+      [0, 0, 0, 0]
     ],
-    color: 'cyan', 
+    color: 'cyan'
   },
-  "l": { 
+  l: {
     shape: [
-      [0,0,1],
-      [1,1,1],
-      [0,0,0]
+      [0, 0, 1],
+      [1, 1, 1],
+      [0, 0, 0]
     ],
-    color: "orange",
+    color: 'orange'
   },
-  "o": {
+  o: {
     shape: [
-      [1,1],
-      [1,1]
+      [1, 1],
+      [1, 1]
     ],
-    color: 'yellow',
+    color: 'yellow'
   },
-  "s": {
+  s: {
     shape: [
-      [0,1,1],
-      [1,1,0],
-      [0,0,0]
+      [0, 1, 1],
+      [1, 1, 0],
+      [0, 0, 0]
     ],
-    color: "green",
+    color: 'green'
   },
-  "t": {
+  t: {
     shape: [
-      [0,1,0],
-      [1,1,1],
-      [0,0,0]
+      [0, 1, 0],
+      [1, 1, 1],
+      [0, 0, 0]
     ],
-    color: "purple",
-  },
+    color: 'purple'
+  }
 }
 
-function randomTetromino() {
-  const randNum = Math.floor(Math.random()  * tetrominosOptions.length )
-  const name = tetrominosOptions[randNum]
+function randomPiece() {
+  const randNum = Math.floor(Math.random() * tetrominosArray.length)
+  const name = tetrominosArray[randNum]
   return tetrominos[name]
-  // return randNum
 }
-console.log(randomTetromino());
+
+function setPieces() {
+  for (let i = 0; i < 5; i++) {
+    nextPieces.push(randomPiece())
+    console.log(nextPieces);   
+  }
+}
+function getPieces(){
+
+}
+
 // populate the empty state
 for (let row = 0; row < 20; row++) {
   playableArray[row] = []
@@ -67,4 +77,3 @@ for (let row = 0; row < 20; row++) {
     playableArray[row][col] = 0
   }
 }
-console.log(playableArray)
