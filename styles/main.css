@@ -1,0 +1,54 @@
+* {
+  box-sizing: border-box;
+}
+/* html{
+  font-family: 'Press Start 2P', cursive;
+} */
+body {
+  height: 100vh;
+  margin: 0;
+  font-family: 'Press Start 2P', cursive;
+}
+
+.controls-wrapper {
+  height: 10vh;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.grid-wrapper {
+  height: 90vh;
+  display: flex;
+  justify-content: center;
+}
+
+canvas{  
+  display: flex;
+  /* flex-wrap: wrap; */
+  height: 820px;
+  width: 400px;
+  box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2);}
+/* .grid {
+  display: flex;
+  flex-wrap: wrap;
+  height: 820px;
+  width: 400px;
+  box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2);
+} */
+
+/* .grid div {
+  border: 1px solid lightgrey;
+  height: auto;
+  width: 10%;
+}
+
+.grid div.pika {
+  background-image: url('../assets/pika-sprite.png');
+  background-repeat: no-repeat;
+  background-size: contain;
+} */
+
+.set-color{
+  background-color: yellow;
+}
