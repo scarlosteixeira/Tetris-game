@@ -20,13 +20,15 @@ body {
   height: 90vh;
   display: flex;
   justify-content: center;
+  align-items: center;
+  gap: 1rem;
 }
 
 canvas{  
   display: flex;
   /* flex-wrap: wrap; */
-  height: 820px;
-  width: 400px;
+  /* height: 820px;
+  width: 400px; */
   box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2);}
 /* .grid {
   display: flex;
@@ -48,6 +50,6 @@ canvas{
   background-size: contain;
 } */
 
-.set-color{
+/* .set-color{
   background-color: yellow;
-}
+} */
