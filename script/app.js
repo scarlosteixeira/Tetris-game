@@ -1,6 +1,7 @@
 // * html variables
 const speedUp = document.querySelector('#speedUp')
 const speedDown = document.querySelector('#speedDown')
+const scoreDisplay = document.querySelector('#score-display')
 const canvas = document.querySelector('#main-game')
 const showNextPiece = document.querySelector('#next-piece')
 const ctx = canvas.getContext('2d')
@@ -14,12 +15,13 @@ ctx.canvas.height = rows * cellSize
 const playableArray = [] // 2d array to track pieces position
 const nextPieces = [] // array with random pieces ready to be used
 let inGamePiece = {}
-let rotateShape = []
+// let rotateShape = []
+let rAFId = null // keep track of animation frame
 let fps = 0
-let fallSpeed = 10 // move piece down as fallSpeed value
+let fallSpeed = 20 // move piece down as fallSpeed value
 let isPaused = false
 // const tetrominosArray = ['i', 'l', 'o', 's', 't'] // list all possible tetrominos options
-const tetrominosArray = ['i'] // list all possible tetrominos options
+const tetrominosArray = ['o',"i"] // list all possible tetrominos options
 const tetrominos = {
   //tetrominos obj
   i: {
@@ -48,7 +50,7 @@ const tetrominos = {
       [0, 1, 0, 0],
       [0, 1, 0, 0]
     ],
-    color: 'cyan'
+    color: 'cyan',
   },
   l: {
     name: 'l',
@@ -72,7 +74,7 @@ const tetrominos = {
       [0, 1, 0],
       [0, 1, 0]
     ],
-    color: 'orange'
+    color: 'orange',
   },
   o: {
     name: 'o',
@@ -92,7 +94,7 @@ const tetrominos = {
       [1, 1],
       [1, 1]
     ],
-    color: 'yellow'
+    color: 'yellow',
   },
   s: {
     name: 's',
@@ -116,7 +118,7 @@ const tetrominos = {
       [1, 1, 0],
       [0, 1, 0]
     ],
-    color: 'green'
+    color: 'green',
   },
   t: {
     name: 't',
@@ -140,8 +142,8 @@ const tetrominos = {
       [1, 1, 0],
       [0, 1, 0]
     ],
-    color: 'purple'
-  }
+    color: 'purple',
+  },
 }
 
 for (let row = -2; row < 20; row++) {
@@ -193,7 +195,7 @@ function pieceProps() {
     row,
     col,
     shape: inGamePiece.shape0,
-    color: inGamePiece.color
+    color: inGamePiece.color,
   }
 }
 let piece = pieceProps()
@@ -208,13 +210,13 @@ function rotate() {
   ]
   if (count < shapes.length - 1) {
     count++
-    rotateShape = shapes[count]
-    console.log(piece, count)
+    piece.shape = shapes[count]
+    // console.log(piece, count)
   } else {
     count = 0
-    rotateShape = shapes[count]
+    piece.shape = shapes[count]
   }
-  return rotateShape
+  return piece.shape
 }
 
 function fallingSpeed() {
@@ -222,26 +224,65 @@ function fallingSpeed() {
     fps = 0
     piece.row++
   } else {
-    fps ++
+    fps++
   }
 }
 
-function restrictions(pieceShape, pieceRow, pieceCol) {
-  let aux = true
-  pieceShape.forEach((row, y) => {
+function restrictionLeft() {
+  let isLeft = false
+  piece.shape.forEach((row, y) => {
     row.forEach((col, x) => {
-      if (
-        (pieceShape[y][x] && pieceCol + x < 0) || // restriction to left
-        (pieceShape[y][x] && pieceCol + x >= cols) || // restriction to right
-        (pieceShape[y][x] && pieceRow + y >= rows) || // restriction to bottom
-        (pieceShape[y][x] && playableArray[pieceRow + y][pieceCol + x]) // piece colision
-      ) {
-        aux = false
+      if (piece.shape[y][x] && piece.col + x <= 0) {
+        isLeft = true
       }
     })
   })
-  return aux
+  return isLeft
 }
+
+function restrictionRight() {
+  let isRight = false
+  piece.shape.forEach((row, y) => {
+    row.forEach((col, x) => {
+      if (piece.shape[y][x] && piece.col + x >= cols - 1) {
+        isRight = true
+      }
+    })
+  })
+  return isRight
+}
+
+function restrictionBottom() {
+  let isBottom = false
+  piece.shape.forEach((row, y) => {
+    row.forEach((col, x) => {
+      if (piece.shape[y][x] && piece.row + y === rows - 1) {
+        isBottom = true
+      }
+    })
+  })
+  return isBottom
+}
+
+function pieceColision() {
+  let isColision = false
+  piece.shape.forEach((row, y) => {
+    row.forEach((col, x) => {
+      // console.log(piece.row + y)
+      // console.log(col + piece.col);
+      // console.log(piece.col , piece.row);
+      if ( piece.shape[y][x]) {
+        if (playableArray[piece.row + y + 1][piece.col + x] ) {
+          // || playableArray[piece.row + y][piece.col + x]
+          isColision = true
+        }  
+      }
+    })
+  })
+
+  return isColision
+}
+
 
 //place piece on the playableArray
 function placePiece() {
@@ -254,6 +295,18 @@ function placePiece() {
     })
   })
   piece = pieceProps()
+}
+
+let removedLines = 0
+function removeLine() {
+  playableArray.forEach((row, y) => {
+    if (playableArray[y].every(elem => elem !== 0)) {
+      removedLines++
+      playableArray.splice(y,1)
+      playableArray.unshift([0,0,0,0,0,0,0,0,0,0])
+    }
+  })
+  return playableArray
 }
 
 function drawPiece() {
@@ -308,48 +361,53 @@ function drawField() {
     }
   }
 }
+let score = 0
+function gameScore() {
+  const num = Math.pow(removedLines,2) * 100
+  removedLines = 0
+  score += num
+  scoreDisplay.innerHTML = score
+}
 
 function update() {
-  requestAnimationFrame(update)
+  rAFId = requestAnimationFrame(update)
   ctx.clearRect(0, 0, canvas.width, canvas.height)
   ctxShowNextPiece.clearRect(0, 0, showNextPiece.width, showNextPiece.height)
   drawField()
   drawPiece()
   fallingSpeed()
-  if (!restrictions(piece.shape, piece.row, piece.col)) {
-    count = 0 // set shape to initial estate
-    piece.row--
-    placePiece()
-  }
-
   
+  if (restrictionBottom() || pieceColision()) {
+    count = 0 // set shape to initial estate
+    placePiece()
+    console.log(playableArray)
+    removeLine()
+    gameScore()
+  }
 }
 
-update()
-speedUp.addEventListener('click', ()=>{
+speedUp.addEventListener('click', () => {
   fallSpeed -= 1
-  console.log(fallSpeed);
+  console.log(fallSpeed)
 })
-speedDown.addEventListener('click', ()=>{
-
+speedDown.addEventListener('click', () => {
   fallSpeed += 2
-  console.log(fallSpeed);
-
+  console.log(fallSpeed)
 })
-document.addEventListener('keydown', e => {
 
+document.addEventListener('keydown', e => {
   //move left
-  if (e.key === 'ArrowLeft') {
+  if (e.key === 'ArrowLeft' && !restrictionLeft() ) {
     piece.col--
-    if (!restrictions(piece.shape, piece.row, piece.col)) {
+    if (pieceColision()) {
       piece.col++
     }
   }
 
   //move right
-  if (e.key === 'ArrowRight') {
+  if (e.key === 'ArrowRight' && !restrictionRight() ) {
     piece.col++
-    if (!restrictions(piece.shape, piece.row, piece.col)) {
+    if (pieceColision()) {
       piece.col--
     }
   }
@@ -360,16 +418,38 @@ document.addEventListener('keydown', e => {
     // console.log(piece.shape);
     // const shape = rotate()
     // console.log(shape.shape);
-    if (restrictions(rotateShape, piece.row, piece.col)) {
-      piece.shape = rotateShape
+    // if (restrictions(rotateShape, piece.row, piece.col)) {
+    //   piece.shape = rotateShape
+    // }
+  }
+
+  // speed up drop
+  if (e.key === 'ArrowDown') {
+    if (!restrictionBottom() || !pieceColision()) {
+      if (piece.row < 17) {
+        fallSpeed = 2
+      }
     }
   }
 
   //pause game
   if (e.key === 'Escape' && !isPaused) {
-    isPaused = false
-  } else if (e.key === 'Escape' && isPaused > 0) {
     isPaused = true
-    cancelAnimationFrame(update)
+    console.log(isPaused)
+    // rAFId = requestAnimationFrame(update)
+  } else if (e.key === 'Escape' && isPaused > 0) {
+    isPaused = false
+    cancelAnimationFrame(rAFId)
+    console.log(isPaused)
   }
 })
+
+document.addEventListener('keyup', (e)=>{
+  if (e.key === 'ArrowDown'){
+    fallSpeed = 20
+  }
+
+})
+if (!isPaused) {
+  rAFId = requestAnimationFrame(update)
+}
