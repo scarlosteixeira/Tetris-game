@@ -1,13 +1,15 @@
 // * html variables
-const speedUp = document.querySelector('#speedUp')
-const speedDown = document.querySelector('#speedDown')
+// const speedUp = document.querySelector('#speedUp')
+// const speedDown = document.querySelector('#speedDown')
 const scoreDisplay = document.querySelector('#score-display')
+const levelDisplay = document.querySelector('#level-display')
+const linesDisplay = document.querySelector('#lines-display')
 const canvas = document.querySelector('#main-game')
 const showNextPiece = document.querySelector('#next-piece')
 const ctx = canvas.getContext('2d')
 const ctxShowNextPiece = showNextPiece.getContext('2d')
 const cols = 10
-const rows = 20
+const rows = cols * 2
 const cellSize = 41 // this is the width and height in px for draw each tetromino single square. screen size is 410x820 => width 410 / 10 col = 41 and height 820 / 20 rows = 41 => 41 row size x 41 col size
 ctx.canvas.width = cols * cellSize
 ctx.canvas.height = rows * cellSize
@@ -18,9 +20,9 @@ let inGamePiece = {}
 // let rotateShape = []
 let rAFId = null // keep track of animation frame
 let fps = 0
-let fallSpeed = 20 // move piece down as fallSpeed value
+let fallSpeed = 30 // move piece down as fallSpeed value
 let isPaused = false
-// const tetrominosArray = ['i', 'l', 'o', 's', 't'] // list all possible tetrominos options
+// const tetrominosArray = ['i', 'l', 'o', 's','z','j','t'] // list all possible tetrominos options
 const tetrominosArray = ['o',"i"] // list all possible tetrominos options
 const tetrominos = {
   //tetrominos obj
@@ -51,6 +53,30 @@ const tetrominos = {
       [0, 1, 0, 0]
     ],
     color: 'cyan',
+  },
+  j: {
+    name: 'j',
+    shape0: [
+      [1, 0, 0],
+      [1, 1, 1],
+      [0, 0, 0]
+    ],
+    shape1: [
+      [0, 1, 1],
+      [0, 1, 0],
+      [0, 1, 0]
+    ],
+    shape2: [
+      [0, 0, 0],
+      [1, 1, 1],
+      [0, 0, 1]
+    ],
+    shape3: [
+      [0, 1, 0],
+      [0, 1, 0],
+      [1, 1, 0]
+    ],
+    color: 'blue',
   },
   l: {
     name: 'l',
@@ -120,6 +146,31 @@ const tetrominos = {
     ],
     color: 'green',
   },
+
+  z: {
+    name: 'z',
+    shape0: [
+      [1, 1, 0],
+      [0, 1, 1],
+      [0, 0, 0]
+    ],
+    shape1: [
+      [0, 0, 1],
+      [0, 1, 1],
+      [0, 1, 0]
+    ],
+    shape2: [
+      [0, 0, 0],
+      [1, 1, 0],
+      [0, 1, 1]
+    ],
+    shape3: [
+      [0, 1, 0],
+      [1, 1, 0],
+      [1, 0, 0]
+    ],
+    color: 'red',
+  },
   t: {
     name: 't',
     shape0: [
@@ -162,7 +213,7 @@ function randomPiece() {
 }
 
 function setPieces() {
-  for (let i = 0; i <= 10; i++) {
+  for (let i = 0; i <= 6; i++) {
     nextPieces.push(randomPiece())
   }
   // console.log(nextPieces);
@@ -283,7 +334,6 @@ function pieceColision() {
   return isColision
 }
 
-
 //place piece on the playableArray
 function placePiece() {
   piece.shape.forEach((row, y) => {
@@ -298,15 +348,43 @@ function placePiece() {
 }
 
 let removedLines = 0
+let isRemoved = false
 function removeLine() {
   playableArray.forEach((row, y) => {
     if (playableArray[y].every(elem => elem !== 0)) {
       removedLines++
+      removedLinesAcc++
       playableArray.splice(y,1)
       playableArray.unshift([0,0,0,0,0,0,0,0,0,0])
+      isRemoved = true
+      levelUp()
     }
   })
   return playableArray
+}
+
+let score = 0
+function gameScore() {
+  const num = Math.pow(removedLines,2) * 100
+  removedLines = 0
+  score += num
+  scoreDisplay.innerHTML = score
+}
+
+let level = 1
+let removedLinesAcc = 0
+let setFallSpeed = 30
+function levelUp() {
+  linesDisplay.innerHTML = removedLinesAcc
+  // console.log(level);
+  if (isRemoved && removedLinesAcc % 10 === 0) {
+    setFallSpeed --
+    // console.log(setFallSpeed);
+    fallSpeed = setFallSpeed
+    level += 1
+  } 
+  isRemoved = false
+  levelDisplay.innerHTML = level
 }
 
 function drawPiece() {
@@ -361,13 +439,8 @@ function drawField() {
     }
   }
 }
-let score = 0
-function gameScore() {
-  const num = Math.pow(removedLines,2) * 100
-  removedLines = 0
-  score += num
-  scoreDisplay.innerHTML = score
-}
+
+
 
 function update() {
   rAFId = requestAnimationFrame(update)
@@ -380,20 +453,20 @@ function update() {
   if (restrictionBottom() || pieceColision()) {
     count = 0 // set shape to initial estate
     placePiece()
-    console.log(playableArray)
+    // console.log(playableArray)
     removeLine()
     gameScore()
   }
 }
 
-speedUp.addEventListener('click', () => {
-  fallSpeed -= 1
-  console.log(fallSpeed)
-})
-speedDown.addEventListener('click', () => {
-  fallSpeed += 2
-  console.log(fallSpeed)
-})
+// speedUp.addEventListener('click', () => {
+//   fallSpeed -= 1
+//   console.log(fallSpeed)
+// })
+// speedDown.addEventListener('click', () => {
+//   fallSpeed += 2
+//   console.log(fallSpeed)
+// })
 
 document.addEventListener('keydown', e => {
   //move left
@@ -415,41 +488,34 @@ document.addEventListener('keydown', e => {
   //rotate
   if (e.key === 'ArrowUp') {
     rotate()
-    // console.log(piece.shape);
-    // const shape = rotate()
-    // console.log(shape.shape);
-    // if (restrictions(rotateShape, piece.row, piece.col)) {
-    //   piece.shape = rotateShape
-    // }
   }
 
   // speed up drop
   if (e.key === 'ArrowDown') {
     if (!restrictionBottom() || !pieceColision()) {
       if (piece.row < 17) {
-        fallSpeed = 2
+        fallSpeed = - 20
       }
     }
   }
 
   //pause game
   if (e.key === 'Escape' && !isPaused) {
-    isPaused = true
+    rAFId = requestAnimationFrame(update)
     console.log(isPaused)
-    // rAFId = requestAnimationFrame(update)
+    isPaused = true
+
   } else if (e.key === 'Escape' && isPaused > 0) {
-    isPaused = false
     cancelAnimationFrame(rAFId)
     console.log(isPaused)
+    isPaused = false    
   }
 })
 
 document.addEventListener('keyup', (e)=>{
   if (e.key === 'ArrowDown'){
-    fallSpeed = 20
+    fallSpeed = setFallSpeed
   }
 
 })
-if (!isPaused) {
-  rAFId = requestAnimationFrame(update)
-}
+
