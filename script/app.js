@@ -17,7 +17,6 @@ ctx.canvas.height = rows * cellSize
 const playableArray = [] // 2d array to track pieces position
 const nextPieces = [] // array with random pieces ready to be used
 let inGamePiece = {}
-// let rotateShape = []
 let rAFId = null // keep track of animation frame
 let fps = 0
 let fallSpeed = 30 // move piece down as fallSpeed value
@@ -246,6 +245,7 @@ function pieceProps() {
     row,
     col,
     shape: inGamePiece.shape0,
+    nextShape: inGamePiece.shape1,
     color: inGamePiece.color,
   }
 }
@@ -259,15 +259,46 @@ function rotate() {
     inGamePiece.shape2,
     inGamePiece.shape3
   ]
+
   if (count < shapes.length - 1) {
     count++
-    piece.shape = shapes[count]
+    // piece.shape = shapes[count]
     // console.log(piece, count)
-  } else {
+  } else if (count % 3 === 0) {
     count = 0
-    piece.shape = shapes[count]
+    
   }
+  const currentRotationIndex = count
+  let nextRotationIndex = currentRotationIndex + 1 
+
+  if (currentRotationIndex === 3){
+    nextRotationIndex = 0
+  }
+
+
+  piece.shape = shapes[currentRotationIndex]
+  piece.nextShape = shapes[nextRotationIndex]
+  // console.log(count);
+  console.log(currentRotationIndex, piece.shape);
+  console.log(nextRotationIndex, piece.nextShape);
+
+
   return piece.shape
+}
+
+function rotateRestriction() {
+  let isRotated = true
+  piece.nextShape.forEach((row,y)=>{
+    row.forEach((col, x)=>{
+      if (piece.nextShape[y][x] && piece.col + x < 0 ||
+        piece.nextShape[y][x] && piece.col + x > cols - 1 ||
+        piece.nextShape[y][x] && playableArray[piece.row + y + 1][piece.col + x] ||
+        piece.nextShape[y][x] && playableArray[piece.row + y][piece.col + x]) {
+        isRotated = false
+      }
+    })
+  })
+  return isRotated
 }
 
 function fallingSpeed() {
@@ -486,7 +517,7 @@ document.addEventListener('keydown', e => {
   }
 
   //rotate
-  if (e.key === 'ArrowUp') {
+  if (e.key === 'ArrowUp' && rotateRestriction()) {
     rotate()
   }
 
