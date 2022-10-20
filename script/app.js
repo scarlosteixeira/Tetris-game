@@ -22,8 +22,8 @@ let rAFId = null // keep track of animation frame
 let fps = 0
 let fallSpeed = 30 // move piece down as fallSpeed value
 let isPaused = false
-// const tetrominosArray = ['i', 'l', 'o', 's','z','j','t'] // list all possible tetrominos options
-const tetrominosArray = ['o',"i"] // list all possible tetrominos options
+const tetrominosArray = ['i', 'l', 'o', 's','z','j','t'] // list all possible tetrominos options
+// const tetrominosArray = ['o',"i"] // list all possible tetrominos options
 const tetrominos = {
   //tetrominos obj
   i: {
