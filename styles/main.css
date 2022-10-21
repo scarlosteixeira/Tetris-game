@@ -9,47 +9,54 @@ body {
   
 }
 
-.controls-wrapper {
+header{
   height: 10vh;
-  display: flex;
-  justify-content: space-around;
-  align-items: center;
+  background: url('../img/header-bg.jpg') no-repeat;
+  background-size: cover;
+  background-position: center;
 }
 
-.grid-wrapper {
+.main-wrapper {
   height: 90vh;
+  /* margin-top: 4rem; */
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 1rem;
+  gap: 5rem;
+  background: url('../../Tetris-game/img/main-bg.jpg') ;
+  /* border: 1px solid red; */
 }
 
-canvas{  
+.stats-wrapper {
+  padding: 0 4rem;
   display: flex;
-  /* flex-wrap: wrap; */
-  /* height: 820px;
-  width: 400px; */
-  box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2);}
-/* .grid {
-  display: flex;
-  flex-wrap: wrap;
-  height: 820px;
-  width: 400px;
-  box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2);
-} */
-
-/* .grid div {
-  border: 1px solid lightgrey;
-  height: auto;
-  width: 10%;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+  background-color: #eee;
+  border: 5px outset #ccc;
 }
 
-.grid div.pika {
-  background-image: url('../assets/pika-sprite.png');
-  background-repeat: no-repeat;
-  background-size: contain;
-} */
+#main-game{  
+  display: flex;
+  box-shadow: 0 0 20px 0 rgba(0, 0, 0, 1);
+  /* border: 1px solid red; */
+}
 
-/* .set-color{
-  background-color: yellow;
-} */
+.right-wrapper{
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.next-piece-wrapper{
+  text-align: center;
+  background-color: #eee;
+  border: 5px outset #ccc;
+}
+
+.command-wrapper{
+  text-align: center;
+  background-color: #eee;
+  border: 5px outset #ccc;
+}

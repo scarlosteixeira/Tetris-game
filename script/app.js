@@ -10,9 +10,24 @@ const ctx = canvas.getContext('2d')
 const ctxShowNextPiece = showNextPiece.getContext('2d')
 const cols = 10
 const rows = cols * 2
-const cellSize = 41 // this is the width and height in px for draw each tetromino single square. screen size is 410x820 => width 410 / 10 col = 41 and height 820 / 20 rows = 41 => 41 row size x 41 col size
-ctx.canvas.width = cols * cellSize
-ctx.canvas.height = rows * cellSize
+ctx.canvas.width = window.innerWidth * 0.214
+ctx.canvas.height = ctx.canvas.width * 2
+ctxShowNextPiece.canvas.width = window.innerWidth * 0.14
+ctxShowNextPiece.canvas.height = ctxShowNextPiece.canvas.width / 1.37
+let cellSize = ctx.canvas.width / 10 // this is the width and height in px for draw each tetromino single square. screen size is 410x820 => width 410 / 10 col = 41 and height 820 / 20 rows = 41 => 41 row size x 41 col size
+
+
+window.addEventListener('resize', ()=>{
+  ctx.canvas.width = window.innerWidth * 0.214
+  ctx.canvas.height = ctx.canvas.width * 2
+  cellSize = ctx.canvas.width / 10
+  ctxShowNextPiece.canvas.width = window.innerWidth * 0.13
+  ctxShowNextPiece.canvas.height = ctxShowNextPiece.canvas.width / 1.37
+  console.log(window.innerWidth, ctx.canvas.width);
+  console.log(window.innerHeight, ctx.canvas.height);
+
+})
+// window.innerWidth / 4
 
 let playableArray = [] // 2d array to track pieces position
 const nextPieces = [] // array with random pieces ready to be used
@@ -442,8 +457,8 @@ function drawPiece() {
       if (nextPieces[0].shape0[y][x]) {
         ctxShowNextPiece.fillStyle = nextPieces[0].color
         ctxShowNextPiece.fillRect(
-          (x + 3 - Math.ceil(nextPieces[0].shape0[0].length / 2)) * cellSize,
-          (y + 1) * cellSize,
+          (x + 3.5 - Math.ceil(nextPieces[0].shape0[0].length / 2)) * cellSize,
+          (y + 1.4) * cellSize,
           cellSize - 1,
           cellSize - 1
         )
@@ -455,15 +470,19 @@ function drawPiece() {
 function drawField() {
   // draw the playfield
   let color
+
   for (let row = 0; row < 20; row++) {
     for (let col = 0; col < 10; col++) {
+      ctx.fillStyle = "#ccc"
+      ctx.strokeStyle = "black"
       ctx.strokeRect(col * cellSize, row * cellSize, cellSize, cellSize)
-      ctxShowNextPiece.strokeRect(
-        col * cellSize,
-        row * cellSize,
-        cellSize,
-        cellSize
-      )
+      ctx.fillRect(col * cellSize, row * cellSize, cellSize, cellSize)
+      // ctxShowNextPiece.strokeRect(
+      //   col * cellSize,
+      //   row * cellSize,
+      //   cellSize,
+      //   cellSize
+      // )
       if (playableArray[row][col]) {
         color = playableArray[row][col]
         ctx.fillStyle = color
@@ -512,7 +531,10 @@ function update() {
   ctxShowNextPiece.clearRect(0, 0, showNextPiece.width, showNextPiece.height)
   drawField()
   drawPiece()
-  fallingSpeed()
+
+  if (!isPaused) {
+    fallingSpeed()
+  }
 
   if (restrictionBottom() || pieceColision()) {
     count = 0 // set shape to initial estate
@@ -536,7 +558,7 @@ function update() {
 
 document.addEventListener('keydown', e => {
   //move left
-  if (e.key === 'ArrowLeft' && !restrictionLeft()) {
+  if (e.key === 'ArrowLeft' && !restrictionLeft() && !isPaused) {
     piece.col--
     if (pieceColision()) {
       piece.col++
@@ -544,7 +566,7 @@ document.addEventListener('keydown', e => {
   }
 
   //move right
-  if (e.key === 'ArrowRight' && !restrictionRight()) {
+  if (e.key === 'ArrowRight' && !restrictionRight() && !isPaused) {
     piece.col++
     if (pieceColision()) {
       piece.col--
@@ -552,12 +574,12 @@ document.addEventListener('keydown', e => {
   }
 
   //rotate
-  if (e.key === 'ArrowUp' && rotateRestriction()) {
+  if (e.key === 'ArrowUp' && rotateRestriction() && !isPaused) {
     rotate()
   }
 
   // speed up drop
-  if (e.key === 'ArrowDown') {
+  if (e.key === 'ArrowDown' && !isPaused) {
     if (!restrictionBottom() || !pieceColision()) {
       if (piece.row < 17) {
         fallSpeed = -10
@@ -566,14 +588,15 @@ document.addEventListener('keydown', e => {
   }
 
   //start game
-  //pause game
+  if (e.key === 'Enter') {
+    window.location.reload()
+  }
+  // pause game
   if (e.key === 'Escape' && !isPaused) {
-    rAFId = requestAnimationFrame(update)
-    console.log(isPaused)
+    // console.log(isPaused)
     isPaused = true
   } else if (e.key === 'Escape' && isPaused > 0) {
-    cancelAnimationFrame(rAFId)
-    console.log(isPaused)
+    // console.log(isPaused)
     isPaused = false
   }
 })
@@ -583,3 +606,5 @@ document.addEventListener('keyup', e => {
     fallSpeed = setFallSpeed
   }
 })
+
+rAFId = requestAnimationFrame(update)
