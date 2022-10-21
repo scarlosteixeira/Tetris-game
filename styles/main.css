@@ -6,7 +6,7 @@
 body {
   height: 100vh;
   margin: 0;
-  
+  text-align: center;
 }
 
 header{
@@ -18,20 +18,18 @@ header{
 
 .main-wrapper {
   height: 90vh;
-  /* margin-top: 4rem; */
   display: flex;
   justify-content: center;
   align-items: center;
   gap: 5rem;
   background: url('../../Tetris-game/img/main-bg.jpg') ;
-  /* border: 1px solid red; */
 }
 
 .stats-wrapper {
-  padding: 0 4rem;
+  padding: 0 2rem;
   display: flex;
   flex-direction: column;
-  justify-content: space-around;
+  justify-content: center;
   align-items: center;
   background-color: #eee;
   border: 5px outset #ccc;
@@ -40,23 +38,63 @@ header{
 #main-game{  
   display: flex;
   box-shadow: 0 0 20px 0 rgba(0, 0, 0, 1);
-  /* border: 1px solid red; */
 }
 
 .right-wrapper{
+
   display: flex;
   flex-direction: column;
   gap: 2rem;
 }
 
 .next-piece-wrapper{
-  text-align: center;
+  
   background-color: #eee;
   border: 5px outset #ccc;
 }
 
 .command-wrapper{
-  text-align: center;
   background-color: #eee;
   border: 5px outset #ccc;
 }
+
+/* Extra small devices (phones, 600px and down) */
+/* @media only screen and (max-width: 600px) {...} */
+
+/* Small devices (portrait tablets and large phones, 600px and up) */
+/* @media only screen and (min-width: 600px) {...} */
+
+/* Medium devices (landscape tablets, 768px and up) */
+/* @media (max-width: 768px) {
+  .main-wrapper {
+    /* flex-direction:row;  */
+    /* flex-wrap: wrap; */
+    /* align-content: center; */
+  /* } */
+
+  /* .right-wrapper{ */
+    /* display: none; */
+  /* } */
+/* } */
+
+/* Large devices (laptops/desktops, 992px and up) */
+/* @media (max-width: 1280px) { */
+  /* *{ */
+    /* font-size: small; */
+    /* line-height:0.5; */
+  /* } */
+  /* .stats-wrapper { */
+    /* padding: 0 0; */
+
+    /* flex-wrap: wrap; */
+    /* align-content: space-around; */
+    
+  /* } */
+  /* .next-piece-wrapper h3{ */
+    /* display: none; */
+  /* } */
+  /* .command-wrapper{ */
+    /* padding: 0 0; */
+
+  /* } */
+/* } */
