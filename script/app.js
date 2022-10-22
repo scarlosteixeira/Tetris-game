@@ -1,44 +1,63 @@
 // * html variables
 // const speedUp = document.querySelector('#speedUp')
 // const speedDown = document.querySelector('#speedDown')
+
 const scoreDisplay = document.querySelector('#score-display')
+
 const levelDisplay = document.querySelector('#level-display')
+
 const linesDisplay = document.querySelector('#lines-display')
+
 const canvas = document.querySelector('#main-game')
+
 const showNextPiece = document.querySelector('#next-piece')
+
 const ctx = canvas.getContext('2d')
+
 const ctxShowNextPiece = showNextPiece.getContext('2d')
-const cols = 10
-const rows = cols * 2
+
+// * canvas sizing
 ctx.canvas.width = window.innerWidth * 0.214
 ctx.canvas.height = ctx.canvas.width * 2
 ctxShowNextPiece.canvas.width = window.innerWidth * 0.14
 ctxShowNextPiece.canvas.height = ctxShowNextPiece.canvas.width / 1.37
-let cellSize = ctx.canvas.width / 10 // this is the width and height in px for draw each tetromino single square. screen size is 410x820 => width 410 / 10 col = 41 and height 820 / 20 rows = 41 => 41 row size x 41 col size
+let cellSize = ctx.canvas.width / 10 // this is the width and height in px for draw each tetromino single square.  Eg. Canvas size is 410x820 => width 410 / 10 col = 41 and height 820 / 20 rows = 41 => 41 row size x 41 col size
 
 
 window.addEventListener('resize', ()=>{
-  ctx.canvas.width = window.innerWidth * 0.214
+  ctx.canvas.width = window.innerWidth * 0.21
   ctx.canvas.height = ctx.canvas.width * 2
   cellSize = ctx.canvas.width / 10
   ctxShowNextPiece.canvas.width = window.innerWidth * 0.13
   ctxShowNextPiece.canvas.height = ctxShowNextPiece.canvas.width / 1.37
   console.log(window.innerWidth, ctx.canvas.width);
   console.log(window.innerHeight, ctx.canvas.height);
-
 })
-// window.innerWidth / 4
+
+//* game global variables
+const cols = 10 // number of columns on the array
+
+const rows = cols * 2 // number of rows on the array
 
 let playableArray = [] // 2d array to track pieces position
-const nextPieces = [] // array with random pieces ready to be used
-let inGamePiece = {}
+
+const nextPieces = [] // array with random pieces ready to be used generated from tedrominos obj
+
+let inGamePiece = {} // piece from nextPiece array to be placed at game main field
+
 let rAFId = null // keep track of animation frame
+
 let fps = 0
+
 let fallSpeed = 30 // move piece down as fallSpeed value
-let isGameOver = false
+
+let isGameOver = false 
+
 let isPaused = false
+
 const tetrominosArray = ['i', 'l', 'o', 's', 'z', 'j', 't'] // list all possible tetrominos options
 // const tetrominosArray = ['o',"i"] // list all possible tetrominos options
+
 const tetrominos = {
   //tetrominos obj
   i: {
@@ -212,6 +231,8 @@ const tetrominos = {
   },
 }
 
+// creates playableArray from row index -2 to 19 and potulates these rows 10 "columns" indexes. set these indexes equals to 0.
+
 for (let row = -2; row < 20; row++) {
   playableArray[row] = []
 
@@ -220,6 +241,8 @@ for (let row = -2; row < 20; row++) {
   }
 }
 
+//! functions
+
 // generate a random number to choose a piece on the tedrominos obj
 function randomPiece() {
   const randNum = Math.floor(Math.random() * tetrominosArray.length)
@@ -227,35 +250,31 @@ function randomPiece() {
   return tetrominos[name]
 }
 
+// create an array with 6 Tedrominos
 function setPieces() {
   for (let i = 0; i <= 6; i++) {
     nextPieces.push(randomPiece())
   }
-  // console.log(nextPieces);
   return nextPieces
 }
 
+// get the first piece from nextPiece array
 function getPieces() {
   if (nextPieces.length <= 2) {
     setPieces()
   }
   inGamePiece = nextPieces[0]
-
-  // console.log(nextPieces);
   nextPieces.shift()
-  // console.log(nextPieces, nextPieces.length);
-  // console.log(inGamePiece);
   return inGamePiece
 }
 
+// creates the obj to be used by all functions on the game
 function pieceProps() {
   getPieces()
-
   // positioning the piece on the first row and on the middle column
-  const row = -2 // always start on row 0 "top row"
+  const row = -2 //start 2 rows above the row 0 "top row", creates the efect of the piece is getting in the game board.
   const col =
     playableArray[0].length / 2 - Math.ceil(inGamePiece.shape0[0].length / 2) // get middle position of  the playable area, minus the offset of the middle piece lenght . this is for start to draw the piece on the middle of screen
-
   return {
     name: inGamePiece.name,
     row,
@@ -265,10 +284,13 @@ function pieceProps() {
     color: inGamePiece.color,
   }
 }
-let piece = pieceProps()
+let piece = pieceProps() // in game piece
 
-let count = 0
+let count = 0 // couter to set the piece shape index
+
+// rotates in game piece
 function rotate() {
+  // list all possible shapes of a particular piece
   const shapes = [
     inGamePiece.shape0,
     inGamePiece.shape1,
@@ -278,11 +300,10 @@ function rotate() {
 
   if (count < shapes.length - 1) {
     count++
-    // piece.shape = shapes[count]
-    // console.log(piece, count)
   } else if (count % 3 === 0) {
     count = 0
   }
+
   const currentRotationIndex = count
   let nextRotationIndex = currentRotationIndex + 1
 
@@ -292,10 +313,6 @@ function rotate() {
 
   piece.shape = shapes[currentRotationIndex]
   piece.nextShape = shapes[nextRotationIndex]
-  // console.log(count);
-  // console.log(currentRotationIndex, piece.shape);
-  // console.log(nextRotationIndex, piece.nextShape);
-
   return piece.shape
 }
 
@@ -467,8 +484,8 @@ function drawPiece() {
   })
 }
 
+// draw the playfield
 function drawField() {
-  // draw the playfield
   let color
 
   for (let row = 0; row < 20; row++) {
@@ -547,6 +564,7 @@ function update() {
   }
 }
 
+//! event listeners
 // speedUp.addEventListener('click', () => {
 //   fallSpeed -= 1
 //   console.log(fallSpeed)
@@ -591,6 +609,7 @@ document.addEventListener('keydown', e => {
   if (e.key === 'Enter') {
     window.location.reload()
   }
+
   // pause game
   if (e.key === 'Escape' && !isPaused) {
     // console.log(isPaused)
@@ -601,10 +620,12 @@ document.addEventListener('keydown', e => {
   }
 })
 
+// speed up drop, set to current game speed when you release the ArrowDown btn.
 document.addEventListener('keyup', e => {
   if (e.key === 'ArrowDown') {
     fallSpeed = setFallSpeed
   }
 })
 
+//! game start
 rAFId = requestAnimationFrame(update)
