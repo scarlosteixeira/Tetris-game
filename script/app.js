@@ -17,8 +17,8 @@ const ctx = canvas.getContext('2d')
 const ctxShowNextPiece = showNextPiece.getContext('2d')
 
 // * canvas sizing
-ctx.canvas.width = window.innerWidth * 0.214
-ctx.canvas.height = ctx.canvas.width * 2
+ctx.canvas.width = window.innerWidth * 0.214  // sets canvas width as per user screen size by about 20% of it.
+ctx.canvas.height = ctx.canvas.width * 2 // sets canvas height to twice the width. the playable field has 10 columns (width) and 20 rows (height)
 ctxShowNextPiece.canvas.width = window.innerWidth * 0.14
 ctxShowNextPiece.canvas.height = ctxShowNextPiece.canvas.width / 1.37
 let cellSize = ctx.canvas.width / 10 // this is the width and height in px for draw each tetromino single square.  Eg. Canvas size is 410x820 => width 410 / 10 col = 41 and height 820 / 20 rows = 41 => 41 row size x 41 col size
@@ -231,7 +231,7 @@ const tetrominos = {
   },
 }
 
-// creates playableArray from row index -2 to 19 and potulates these rows 10 "columns" indexes. set these indexes equals to 0.
+// creates playableArray from row index -2 to 19 and populates these rows 10 "columns" indexes. set these indexes equals to 0.
 
 for (let row = -2; row < 20; row++) {
   playableArray[row] = []
@@ -271,7 +271,7 @@ function getPieces() {
 // creates the obj to be used by all functions on the game
 function pieceProps() {
   getPieces()
-  // positioning the piece on the first row and on the middle column
+  // positioning the piece on the first row (-2 index) and on the middle column
   const row = -2 //start 2 rows above the row 0 "top row", creates the efect of the piece is getting in the game board.
   const col =
     playableArray[0].length / 2 - Math.ceil(inGamePiece.shape0[0].length / 2) // get middle position of  the playable area, minus the offset of the middle piece lenght . this is for start to draw the piece on the middle of screen
