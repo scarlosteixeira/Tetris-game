@@ -122,7 +122,71 @@ const tetrominos = {
 
 ```
 
-* 
+* The restrictions for the piece moviment in the field are made by functions that check for collisions with the walls and other pieces. The functions are called on keydown events and the piece is moved accordingly. The piece is moved by changing the piece's position on the playable field array. 
+
+``` javascript
+//restrictions
+
+function restrictionLeft() {
+  //sets isLeft to false
+  let isLeft = false
+  //loops through the piece shape
+  piece.shape.forEach((row, y) => {
+    row.forEach((col, x) => {
+      //if the piece shape is not empty and the piece column is less or equal to 0, sets isLeft to true
+      if (piece.shape[y][x] && piece.col + x <= 0) {
+        isLeft = true
+      }
+    })
+  })
+  return isLeft
+}
+
+function restrictionRight() {
+  let isRight = false
+  piece.shape.forEach((row, y) => {
+    row.forEach((col, x) => {
+      //if the piece shape is not empty and the piece column is greater or equal to 9, sets isRight to true
+      if (piece.shape[y][x] && piece.col + x >= cols - 1) {
+        isRight = true
+      }
+    })
+  })
+  return isRight
+}
+
+function restrictionBottom() {
+  let isBottom = false
+  piece.shape.forEach((row, y) => {
+    row.forEach((col, x) => {
+      //if the piece shape is not empty and the piece row is greater or equal to 19, sets isBottom to true
+      if (piece.shape[y][x] && piece.row + y === rows - 1) {
+        isBottom = true
+      }
+    })
+  })
+  return isBottom
+}
+
+function pieceColision() {
+  let isColision = false
+  piece.shape.forEach((row, y) => {
+    row.forEach((col, x) => {
+      if (piece.shape[y][x]) {
+        // check if the actual piece colides with some piece is placed in the playable field array, if so, sets isColision to true. 
+        if (playableArray[piece.row + y + 1][piece.col + x]) {
+          isColision = true
+        }
+      }
+    })
+  })
+
+  return isColision
+}
+
+
+
+```
 
 
 
