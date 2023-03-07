@@ -245,36 +245,48 @@ for (let row = -2; row < 20; row++) {
 
 // generate a random number to choose a piece on the tedrominos obj
 function randomPiece() {
+  // get a random number between 0 and 6
   const randNum = Math.floor(Math.random() * tetrominosArray.length)
+  // get the name of the piece from the tetrominosArray
   const name = tetrominosArray[randNum]
+  // return the piece from the tetrominos obj
   return tetrominos[name]
 }
 
 // create an array with 6 Tedrominos
 function setPieces() {
+  // iterate over the nextPieces array and push a random piece on it 6 times.
   for (let i = 0; i <= 6; i++) {
     nextPieces.push(randomPiece())
   }
+  // return the array
   return nextPieces
 }
 
 // get the first piece from nextPiece array
 function getPieces() {
+  // if the nextPieces array has less than 2 pieces, call the setPieces function to create a new array with 6 pieces
   if (nextPieces.length <= 2) {
     setPieces()
   }
+  // get the first piece from the array and set it to the inGamePiece variable
   inGamePiece = nextPieces[0]
+  // remove the first piece from the array
   nextPieces.shift()
+  // return the inGamePiece
   return inGamePiece
 }
 
 // creates the obj to be used by all functions on the game
 function pieceProps() {
+  // call the getPieces function to get the first piece from the nextPieces array
   getPieces()
   // positioning the piece on the first row (-2 index) and on the middle column
   const row = -2 //start 2 rows above the row 0 "top row", creates the efect of the piece is getting in the game board.
   const col =
-    playableArray[0].length / 2 - Math.ceil(inGamePiece.shape0[0].length / 2) // get middle position of  the playable area, minus the offset of the middle piece lenght . this is for start to draw the piece on the middle of screen
+    playableArray[0].length / 2 - Math.ceil(inGamePiece.shape0[0].length / 2) // get middle position of  the playable area, minus the offset of the middle piece lenght . this is for start to draw the piece on the middle of screen.
+
+  // return the obj with the piece properties and the position
   return {
     name: inGamePiece.name,
     row,
@@ -297,22 +309,26 @@ function rotate() {
     inGamePiece.shape2,
     inGamePiece.shape3
   ]
-
+  // if the count is less than the shapes array length, increase the count by 1
   if (count < shapes.length - 1) {
     count++
+  // if the count is equal to the shapes array length, set the count to 0
   } else if (count % 3 === 0) {
     count = 0
   }
-
+  // set the current shape index to the count 
   const currentRotationIndex = count
+  // set the next shape index to the count + 1 (next shape)
   let nextRotationIndex = currentRotationIndex + 1
-
+  // if the next shape index is equal to the shapes array length, set the next shape index to 0 (first shape).
   if (currentRotationIndex === 3) {
     nextRotationIndex = 0
   }
-
+  // set the piece shape to the current shape index
   piece.shape = shapes[currentRotationIndex]
+  // set the piece next shape to the next shape index
   piece.nextShape = shapes[nextRotationIndex]
+  // return the piece shape
   return piece.shape
 }
 
@@ -452,16 +468,21 @@ function levelUp() {
   levelDisplay.innerHTML = level
 }
 
+
 function drawPiece() {
   // iterate through the piece.shape 2d array row by row
   piece.shape.forEach((row, y) => {
     row.forEach((col, x) => {
+      // if the array element is 1(true) draw a rectangle as cellSize value
       if (piece.shape[y][x]) {
-        // if the array element is 1(true) draw a rectangle as cellSize value
-        ctx.fillStyle = piece.color // get piece.color property and fill the rectangle
+        // get piece.color property and fill the rectangle
+        ctx.fillStyle = piece.color 
+        // draw the rectangle
         ctx.fillRect(
+          // x and y coordinates of the rectangle
           (piece.col + x) * cellSize,
           (piece.row + y) * cellSize,
+          // width and height of the rectangle
           cellSize - 1,
           cellSize - 1
         )
@@ -487,22 +508,25 @@ function drawPiece() {
 // draw the playfield
 function drawField() {
   let color
-
+  // iterate through the playableArray 2d array row by row
   for (let row = 0; row < 20; row++) {
     for (let col = 0; col < 10; col++) {
+      // set the fill color to grey
       ctx.fillStyle = "#ccc"
+      // set the stroke color to black
       ctx.strokeStyle = "black"
+      // draw the rectangle borders
       ctx.strokeRect(col * cellSize, row * cellSize, cellSize, cellSize)
+      // draw the rectangle fill
       ctx.fillRect(col * cellSize, row * cellSize, cellSize, cellSize)
-      // ctxShowNextPiece.strokeRect(
-      //   col * cellSize,
-      //   row * cellSize,
-      //   cellSize,
-      //   cellSize
-      // )
+
+      // if the array element is not 0(false) draw a rectangle as cellSize value
       if (playableArray[row][col]) {
+        // get the color from the playableArray
         color = playableArray[row][col]
+        // fill the rectangle with the color
         ctx.fillStyle = color
+        // draw the rectangle
         ctx.fillRect(col * cellSize, row * cellSize, cellSize - 1, cellSize - 1)
       }
     }
