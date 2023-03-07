@@ -351,6 +351,7 @@ function rotateRestriction() {
 }
 
 function fallingSpeed() {
+  // if the fps is greater than the fallSpeed, set the fps to 0 and increase the piece row by 1
   if (fps > fallSpeed) {
     fps = 0
     piece.row++
@@ -416,8 +417,10 @@ function pieceColision() {
 
 //place piece on the playableArray
 function placePiece() {
+  // iterate over the piece shape
   piece.shape.forEach((row, y) => {
     row.forEach((col, x) => {
+      // if the piece shape is not 0, set the playableArray position to the piece color
       if (piece.shape[y][x]) {
         // console.log(playableArray)
         playableArray[piece.row + y][piece.col + x] = piece.color
@@ -429,8 +432,11 @@ function placePiece() {
 
 let removedLines = 0
 let isRemoved = false
+// remove line if all the playableArray position is not 0 (line is full)
 function removeLine() {
+  // iterate over the playableArray
   playableArray.forEach((row, y) => {
+
     if (playableArray[y].every(elem => elem !== 0)) {
       removedLines++
       removedLinesAcc++

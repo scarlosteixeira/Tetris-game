@@ -75,8 +75,9 @@ Your app must:
 ## Planning
 
 
-A digital whiteboard (Scalidraw) was used to sketch and plan the project, it gives a brief idea of the project's challenges and how these can be addressed. As the layout of the game and witch programing resources are viable to solve addressed problems. Eg. How do I track Tredominos position on the playable field?
-How do I implement collision between walls and pieces?
+A digital whiteboard (Excalidraw) was used to sketch and plan the project; it gives a brief idea of the project's challenges and how these can be addressed such as the layout of the game and which programming resources are viable to solve mentioned problems. Eg. How do I track Tredominos position on the playable field?
+How do I implement a collision between walls and pieces?
+
 
 ![Whiteboarding png ](./tetris-whiteboarding.png)
 
@@ -221,8 +222,9 @@ function update() { // update function to be called by requestAnimationFrame to 
 //! game start
 rAFId = requestAnimationFrame(update)
 ```
+The next 2 days I worked on the MVP (Minimum Viable Product) version of the game, which is the game with the basic functionalities, such as the restrictions and collisions, piece control and the line clear function.
 
-* The restrictions for the piece moviment in the field are made by functions that check for collisions with the walls and other pieces. The functions are called on keydown events and the piece is moved accordingly. The piece is moved by changing the piece's position on the playable field array. 
+* The restrictions for the piece moviment in the field are made by functions that check for collisions with the walls and other pieces. If the piece is colliding with the walls or other pieces, the function returns true, if not, returns false. 
 
 ``` javascript
 //restrictions
@@ -233,7 +235,7 @@ function restrictionLeft() {
   //loops through the piece shape
   piece.shape.forEach((row, y) => {
     row.forEach((col, x) => {
-      //if the piece shape is not empty and the piece column is less or equal to 0, sets isLeft to true
+      //if the piece shape is not empty and the piece column is less or equal to 0 (first column), sets isLeft to true
       if (piece.shape[y][x] && piece.col + x <= 0) {
         isLeft = true
       }
@@ -246,7 +248,7 @@ function restrictionRight() {
   let isRight = false
   piece.shape.forEach((row, y) => {
     row.forEach((col, x) => {
-      //if the piece shape is not empty and the piece column is greater or equal to 9, sets isRight to true
+      //if the piece shape is not empty and the piece column is greater or equal to 9 (last column), sets isRight to true
       if (piece.shape[y][x] && piece.col + x >= cols - 1) {
         isRight = true
       }
@@ -259,7 +261,7 @@ function restrictionBottom() {
   let isBottom = false
   piece.shape.forEach((row, y) => {
     row.forEach((col, x) => {
-      //if the piece shape is not empty and the piece row is greater or equal to 19, sets isBottom to true
+      //if the piece shape is not empty and the piece row is greater or equal to 19 (last row), sets isBottom to true
       if (piece.shape[y][x] && piece.row + y === rows - 1) {
         isBottom = true
       }
@@ -283,11 +285,35 @@ function pieceColision() {
 
   return isColision
 }
-
-
-
 ```
+* The piece control is made by keydown events, which call the functions to move the piece accordingly. The piece is moved by changing the piece's position on the playable field array. 
 
+``` javascript
+document.addEventListener('keydown', e => {
+  //move left
+  if (e.key === 'ArrowLeft' && !restrictionLeft() && !isPaused) {
+    //if the piece is not colliding with the left wall, move the piece to the left
+    piece.col--
+    //if the piece is colliding with another piece, move the piece back to the right
+    if (pieceColision()) {
+      piece.col++
+    }
+  }
+
+  //move right
+  if (e.key === 'ArrowRight' && !restrictionRight() && !isPaused) {
+    piece.col++
+    if (pieceColision()) {
+      piece.col--
+    }
+  }
+
+  //rotate
+  if (e.key === 'ArrowUp' && rotateRestriction() && !isPaused) {
+    rotate()
+  }
+})
+```
 
 
 
