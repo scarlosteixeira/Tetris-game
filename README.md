@@ -224,7 +224,7 @@ rAFId = requestAnimationFrame(update)
 ```
 The next 2 days I worked on the MVP (Minimum Viable Product) version of the game, which is the game with the basic functionalities, such as the restrictions and collisions, piece control and the line clear function.
 
-* The restrictions for the piece moviment in the field are made by functions that check for collisions with the walls and other pieces. If the piece is colliding with the walls or other pieces, the function returns true, if not, returns false. 
+* The restrictions for the piece moviment in the field are made by functions that check for collisions with the walls and other pieces.
 
 ``` javascript
 //restrictions
@@ -314,14 +314,70 @@ document.addEventListener('keydown', e => {
   }
 })
 ```
+* The line clear function checks for full lines in the playable field array, and if there is a full line, it clears it and moves all the pieces above it down one row.
 
+``` javascript
+function removeLine() {
+  // iterate over the playableArray
+  playableArray.forEach((row, y) => {
+    // checks every indexes of the playableArray row if is different from 0 (line is full)
+    if (playableArray[y].every(elem => elem !== 0)) {
+
+      removedLines++
+      
+      removedLinesAcc++
+      // remove the line
+      playableArray.splice(y, 1)
+      // add a new line at the top of the playableArray
+      playableArray.unshift([0, 0, 0, 0, 0, 0, 0, 0, 0, 0])
+      isRemoved = true
+      levelUp()
+    }
+  })
+  return playableArray
+}
+```
+At this point I had the basic game working, but without any score or level system, neither a game over screen or next piece preview. I decided to add these features to the game, and also to add a pause function and a restart button.
+
+I came into this during the polishing process period, it takes me 4 days, as well as the bugs fixing and adjustments on the functions to fit the new functionalities.
+
+* I used another instance of Canvas to draw the next piece preview.
+
+``` javascript
+  // * next piece preview
+  const showNextPiece = document.querySelector('#next-piece')
+  const ctxShowNextPiece = showNextPiece.getContext('2d')
+  // * canvas sizing
+  ctxShowNextPiece.canvas.width = window.innerWidth * 0.14
+  ctxShowNextPiece.canvas.height = ctxShowNextPiece.canvas.width / 1.37
+
+function drawPiece() {
+  // draw the piece in the next piece preview
+  nextPieces[0].shape0.forEach((row, y) => {
+    row.forEach((col, x) => {
+      if (nextPieces[0].shape0[y][x]) {
+        ctxShowNextPiece.fillStyle = nextPieces[0].color
+        ctxShowNextPiece.fillRect(
+          (x + 3.5 - Math.ceil(nextPieces[0].shape0[0].length / 2)) * cellSize,
+          (y + 1.4) * cellSize,
+          cellSize - 1,
+          cellSize - 1
+        )
+      }
+    })
+  })
+}
+```
 
 
 ## Challenges
 
 #### Canvas 
 
-Using canvas for this project was a personal challenge that, until then, had not been addressed in the course
+Using canvas for this project was a personal challenge that, until then, had not been addressed in the course.
+
+I had to learn how to use Canvas, due to the limited time I had to work on the project, it became a challenge to learn how to use it and implement it in the project.
+
 You can see below a code snippet from canvas configuration for main and next piece screen width, height, and piece sizes, also an event listener to auto resize them when screen size changes.
 
 ``` javascript
@@ -331,8 +387,7 @@ ctx.canvas.height = ctx.canvas.width * 2 // sets canvas height to twice the widt
 The playable field has 10 columns (width) and 20 rows (height)
 ctxShowNextPiece.canvas.width = window.innerWidth * 0.14
 ctxShowNextPiece.canvas.height = ctxShowNextPiece.canvas.width / 1.37
-let cellSize = ctx.canvas.width / 10 // this is the width and height in px for draw each tetromino single square.  
-Eg. Canvas size is 410x820 => width 410 / 10 col = 41 and height 820 / 20 rows = 41 => 41 row size x 41 col size
+let cellSize = ctx.canvas.width / 10 // this is the width and height in px for draw each tetromino single square. Eg. Canvas size is 410x820 => width 410 / 10 col = 41 and height 820 / 20 rows = 41 => 41 row size x 41 col size
 
 
 window.addEventListener('resize', ()=>{

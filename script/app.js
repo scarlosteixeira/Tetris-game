@@ -436,11 +436,15 @@ let isRemoved = false
 function removeLine() {
   // iterate over the playableArray
   playableArray.forEach((row, y) => {
-
+    // checks every indexes of the playableArray row if is different from 0 (line is full)
     if (playableArray[y].every(elem => elem !== 0)) {
+
       removedLines++
+      
       removedLinesAcc++
+      // remove the line
       playableArray.splice(y, 1)
+      // add a new line at the top of the playableArray
       playableArray.unshift([0, 0, 0, 0, 0, 0, 0, 0, 0, 0])
       isRemoved = true
       levelUp()
