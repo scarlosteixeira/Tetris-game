@@ -2,7 +2,6 @@
 
 ![tetris logo](img/tetris-logo.png)
 
-## Description
 
 ## Description
 
@@ -207,6 +206,7 @@ function pieceProps() {
 }
 ```
 * I had set the basic canvas elements and functions to draw the game on the canvas element. At this point I had the playable field drawn and the piece falling without any restrictions or collisions, it means that the piece was falling through the playable field and the walls.
+
 ``` javascript
 // canvas context
 const canvas = document.querySelector('#main-game')
@@ -368,6 +368,102 @@ function drawPiece() {
   })
 }
 ```
+* I added a score system, which increases the score geometrically as the number of removed rows increase, and also a level system, which increases by 1 for every 10 lines cleared.
+
+``` javascript
+
+// game score
+let score = 0
+function gameScore() {
+  // get the square of the removed lines and multiply by 100
+  const num = Math.pow(removedLines, 2) * 100
+  // reset the removed lines to 0
+  removedLines = 0
+  // add the score to the game score
+  score += num
+  // display the score
+  scoreDisplay.innerHTML = score
+}
+
+// game level
+let level = 1
+// accumulator for removed lines to increase the level and display it on the screen.
+let removedLinesAcc = 0
+// set the fall speed
+let setFallSpeed = 30
+
+// increase the level and the fall speed
+function levelUp() {
+  //show the removed lines on the screen
+  linesDisplay.innerHTML = removedLinesAcc
+  
+  // when the is Removed variable is set true by the removeLine function and the removed lines accumulator is divisible by 10 (every 10 lines removed),  increase the level and the fall speed.
+  if (isRemoved && removedLinesAcc % 10 === 0) {
+    // increase the fall speed by 2, as the fallSpeed variable decrease the speed of the piece falling increase.
+    setFallSpeed -= 2
+    fallSpeed = setFallSpeed
+    // increase the level
+    level += 1
+  }
+  // reset the isRemoved variable to false
+  isRemoved = false
+  // display the level
+  levelDisplay.innerHTML = level
+}
+```
+* The game over screen is displayed when the piece is not able to fall anymore, it will replace the playable field array data with the game over message.
+
+``` javascript
+// sets the game over screen 
+function gameOver() {
+  // if any piece excceed the playableArray top row, the game is over
+  if (playableArray[-1].some((elem => elem !== 0))) {
+    // stop the game loop
+    cancelAnimationFrame(rAFId)
+    // set the game over screen to true
+    isGameOver = true
+    // game over array 
+    const gameOverArray = [
+      [0, "red", "red", "red", "red", 0, 0, "blue", 0, 0],
+      [0, "red", 0, 0, 0, 0, "blue", 0, "blue", 0],
+      [0, "red", 0, "red", "red", 0, "blue", "blue", "blue", 0],
+      [0, "red", 0, 0, "red", 0, "blue", 0, "blue", 0],
+      [0, "red", "red", "red", "red", 0, "blue", 0, "blue", 0],
+      [0, "green", 0, 0, "green", 0, "orange", "orange", "orange", 0],
+      [0, "green", "green", "green", "green", 0, "orange", 0, 0, 0],
+      [0, "green", "green", "green", "green", 0, "orange", "orange", "orange", 0],
+      [0, "green", 0, 0, "green", 0, "orange", 0, 0, 0],
+      [0, "green", 0, 0, "green", 0, "orange", "orange", "orange", 0],
+      [0, "yellow", "yellow", "yellow", 0, "purple", 0, 0, "purple", 0],
+      [0, "yellow", 0, "yellow", 0, "purple", 0, 0, "purple", 0],
+      [0, "yellow", 0, "yellow", 0, "purple", 0, 0, "purple", 0],
+      [0, "yellow", 0, "yellow", 0, 0, "purple", "purple", 0, 0],
+      [0, "yellow", "yellow", "yellow", 0, 0, "purple", "purple", 0, 0],
+      [0, "orange", "orange", "orange", 0, 0, "cyan", "cyan", "cyan", 0],
+      [0, "orange", 0, 0, 0, 0, "cyan", 0, "cyan", 0],
+      [0, "orange", "orange", "orange", 0, 0, "cyan", "cyan", "cyan", 0],
+      [0, "orange", 0, 0, 0, 0, "cyan", "cyan", 0, 0],
+      [0, "orange", "orange", "orange", 0, 0, "cyan", 0, "cyan", 0]
+    ]
+    // set the playableArray to the game over array
+    playableArray = gameOverArray
+    // clear the canvas
+    ctx.clearRect(0, 0, canvas.width, canvas.height)
+    // draw the game over screen
+    drawField()
+  }
+  return isGameOver
+}
+```
+The game over screen is displayed as below:
+<br>
+
+![Game Over png ](./game-over-screen.png)
+
+This is the finished game!
+
+![Finished Game png ](./tetris.png)
+
 
 
 ## Challenges
@@ -400,3 +496,4 @@ window.addEventListener('resize', ()=>{
   console.log(window.innerHeight, ctx.canvas.height);
 })
 ```
+

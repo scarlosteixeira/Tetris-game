@@ -332,11 +332,15 @@ function rotate() {
   return piece.shape
 }
 
+// check if the piece can be rotated
 function rotateRestriction() {
-  let isRotated = true
+  // set the isRotated variable to true
+  let isRotated = true 
+  // iterate over the piece next shape
   piece.nextShape.forEach((row, y) => {
     row.forEach((col, x) => {
       if (
+      
         (piece.nextShape[y][x] && piece.col + x < 0) ||
         (piece.nextShape[y][x] && piece.col + x > cols - 1) ||
         (piece.nextShape[y][x] &&
@@ -452,29 +456,42 @@ function removeLine() {
   })
   return playableArray
 }
-
+// game score
 let score = 0
 function gameScore() {
+  // get the square of the removed lines and multiply by 100
   const num = Math.pow(removedLines, 2) * 100
+  // reset the removed lines to 0
   removedLines = 0
+  // add the score to the game score
   score += num
+  // display the score
   scoreDisplay.innerHTML = score
 }
 
+// game level
 let level = 1
+// accumulator for removed lines to increase the level and display it on the screen.
 let removedLinesAcc = 0
+// set the fall speed
 let setFallSpeed = 30
 
+// increase the level and the fall speed
 function levelUp() {
+  //show the removed lines on the screen
   linesDisplay.innerHTML = removedLinesAcc
-  // console.log(level);
+  
+  // when the is Removed variable is set true by the removeLine function and the removed lines accumulator is divisible by 10 (every 10 lines removed),  increase the level and the fall speed.
   if (isRemoved && removedLinesAcc % 10 === 0) {
+    // increase the fall speed by 2, as the fallSpeed variable decrease the speed of the piece falling increase.
     setFallSpeed -= 2
-    // console.log(setFallSpeed);
     fallSpeed = setFallSpeed
+    // increase the level
     level += 1
   }
+  // reset the isRemoved variable to false
   isRemoved = false
+  // display the level
   levelDisplay.innerHTML = level
 }
 
@@ -543,10 +560,15 @@ function drawField() {
   }
 }
 
+// sets the game over screen 
 function gameOver() {
+  // if any piece excceed the playableArray top row, the game is over
   if (playableArray[-1].some((elem => elem !== 0))) {
+    // stop the game loop
     cancelAnimationFrame(rAFId)
+    // set the game over screen to true
     isGameOver = true
+    // game over array 
     const gameOverArray = [
       [0, "red", "red", "red", "red", 0, 0, "blue", 0, 0],
       [0, "red", 0, 0, 0, 0, "blue", 0, "blue", 0],
@@ -569,8 +591,11 @@ function gameOver() {
       [0, "orange", 0, 0, 0, 0, "cyan", "cyan", 0, 0],
       [0, "orange", "orange", "orange", 0, 0, "cyan", 0, "cyan", 0]
     ]
+    // set the playableArray to the game over array
     playableArray = gameOverArray
+    // clear the canvas
     ctx.clearRect(0, 0, canvas.width, canvas.height)
+    // draw the game over screen
     drawField()
   }
   return isGameOver
@@ -639,7 +664,7 @@ document.addEventListener('keydown', e => {
     }
   }
 
-  //start game
+  //start game and restart game
   if (e.key === 'Enter') {
     window.location.reload()
   }
