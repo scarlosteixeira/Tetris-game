@@ -89,9 +89,9 @@ The Tetris Wiki is a great resource for anyone interested in learning more about
 
 I built the project using HTML, CSS and JavaScript; as well as using the canvas element, which is a part of the HTML5 specification. It allows for dynamic, scriptable rendering of 2D shapes and bitmap images. **[Canvas MDN](https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API/Tutorial)**
 
-I used 3 days on development and coding of the fundamental blocks of the game, such as the playable field, the pieces, the functions that controls pieces randomization, the array of next pieces, the piece in game, and the canvas elements to shown the field and pieces. The proccess was as follows:
+I spent 3 days on development and coding of the fundamental blocks of the game, such as the playable field, the pieces, the functions that control pieces randomization, the array of next pieces, the piece in game, and the canvas elements to show the field and pieces. The process was as follows:
 
-* I started creating a playable field. The playable field is a 10x20 grid, with 2 additional rows, out of visible area, where the pieces are created and start to fall from this point. The grid is created using a nested for loop, where the outer loop creates the rows and the inner loop creates the columns and sets the field as empty giving the adresses the value 0. 
+* I started creating a playable field. The playable field is a 10x20 grid, with 2 additional rows, out of the visible area, where the pieces are created and start to fall from this point. The grid is created using a nested for loop, where the outer loop creates the rows and the inner loop creates the columns and sets the field as empty giving the addresses the value 0. 
 
 ``` javascript
 // creates playableArray from row index -2 to 19 and populates these rows 10 "columns" indexes. set these indexes equals to 0.
@@ -107,7 +107,7 @@ for (let row = -2; row < 20; row++) {
 ```
 <br>
 
-* I created the basic variables for the game, such as the ``tedrominos`` objects, that contains all possible shapes for each piece, it name and color. I worked on the pieces flow control variables and functions, where the variables are ``tedrominosArray``, ``nextPieces``, ``inGamePiece``, and ``piece`` and the functions are ``randomPiece()`` , ``setPieces()``, ``getPieces()``, ``pieceProps()``.
+* I created the basic variables for the game, such as the ``tedrominos`` objects, that contains all possible shapes for each piece, its name and colour. I worked on the pieces flow control variables and functions, where the variables are ``tedrominosArray``, ``nextPieces``, ``inGamePiece``, and ``piece`` and the functions are ``randomPiece()`` , ``setPieces()``, ``getPieces()``, ``pieceProps()``.
 
 ``` javascript
 //tetrominos obj
@@ -190,9 +190,9 @@ function pieceProps() {
   // call the getPieces function to get the first piece from the nextPieces array
   getPieces()
   // positioning the piece on the first row (-2 index) and on the middle column
-  const row = -2 //start 2 rows above the row 0 "top row", creates the efect of the piece is getting in the game board.
+  const row = -2 //start 2 rows above the row 0 "top row", creating the effect of the piece getting on the game board.
   const col =
-    playableArray[0].length / 2 - Math.ceil(inGamePiece.shape0[0].length / 2) // get middle position of  the playable area, minus the offset of the middle piece lenght . this is for start to draw the piece on the middle of screen.
+    playableArray[0].length / 2 - Math.ceil(inGamePiece.shape0[0].length / 2) // get middle position of  the playable area, minus the offset of the middle piece length . This is to start to draw the piece in the middle of the screen.
 
   // return the obj with the piece properties and the position
   return {
@@ -224,7 +224,7 @@ rAFId = requestAnimationFrame(update)
 ```
 The next 2 days I worked on the MVP (Minimum Viable Product) version of the game, which is the game with the basic functionalities, such as the restrictions and collisions, piece control and the line clear function.
 
-* The restrictions for the piece moviment in the field are made by functions that check for collisions with the walls and other pieces.
+* The restrictions for the piece movement in the field are made by functions that check for collisions with the walls and other pieces.
 
 ``` javascript
 //restrictions
@@ -275,7 +275,7 @@ function pieceColision() {
   piece.shape.forEach((row, y) => {
     row.forEach((col, x) => {
       if (piece.shape[y][x]) {
-        // check if the actual piece colides with some piece is placed in the playable field array, if so, sets isColision to true. 
+        // check if the actual piece collides with some piece that is placed in the playable field array, if so, set isColision to true. 
         if (playableArray[piece.row + y + 1][piece.col + x]) {
           isColision = true
         }
@@ -339,7 +339,7 @@ function removeLine() {
 ```
 At this point I had the basic game working, but without any score or level system, neither a game over screen or next piece preview. I decided to add these features to the game, and also to add a pause function and a restart button.
 
-I came into this during the polishing process period, it takes me 4 days, as well as the bugs fixing and adjustments on the functions to fit the new functionalities.
+I came into this during the polishing process period, it takes me 4 days, as well as the bug fixing and adjustments on the functions to fit the new functionalities.
 
 * I used another instance of Canvas to draw the next piece preview.
 
@@ -368,7 +368,7 @@ function drawPiece() {
   })
 }
 ```
-* I added a score system, which increases the score geometrically as the number of removed rows increase, and also a level system, which increases by 1 for every 10 lines cleared.
+* I added a score system, which increases the score geometrically as the number of removed rows increases, and also a level system, which increases by 1 for every 10 lines cleared.
 
 ``` javascript
 
@@ -399,7 +399,7 @@ function levelUp() {
   
   // when the is Removed variable is set true by the removeLine function and the removed lines accumulator is divisible by 10 (every 10 lines removed),  increase the level and the fall speed.
   if (isRemoved && removedLinesAcc % 10 === 0) {
-    // increase the fall speed by 2, as the fallSpeed variable decrease the speed of the piece falling increase.
+    // increase the fall speed by 2, as the fallSpeed variable decreases the speed of the piece increases.
     setFallSpeed -= 2
     fallSpeed = setFallSpeed
     // increase the level
@@ -416,7 +416,7 @@ function levelUp() {
 ``` javascript
 // sets the game over screen 
 function gameOver() {
-  // if any piece excceed the playableArray top row, the game is over
+  // if any piece exceed the playableArray top row, the game is over
   if (playableArray[-1].some((elem => elem !== 0))) {
     // stop the game loop
     cancelAnimationFrame(rAFId)
