@@ -499,17 +499,18 @@ window.addEventListener('resize', ()=>{
 
 ## Wins
 
-  I used divide and conquer approach to solve the problem. I broke the problem into smaller problems and solved them one by one. that's why I splited the project into functions that are responsible for a specific task, and using them where they are needed.
+  I used divide and conquer approach to solve the problem. I broke the problem into smaller problems and solved them one by one. That's why I splitted the project into functions that are responsible for a specific task, and use them where they are needed.
+
 
 ## Key Learnings/Takeaways
 
-  Basically I used all JavaScript concepts that I learned in the course, this project made me more confident in apply these comcepts into real world problems.
+  Basically I used all JavaScript concepts that I learned in the course, this project made me more confident in applying these concepts into real world problems.
 
 
 ## Bugs
-  Side collison detection between pieces is not working properly.
+  Side collision detection between pieces is not working properly.
 
-  The problem occurs when you have a placed piece and this piece has an open cell below it. when you try to push a playable piece agaist this peace, one square of the playable piece will be placed inside the placed piece, but it still falling down and will fit the free space below the placed piece.
+  The problem occurs when you have a placed piece and this piece has an open cell below it. when you try to push a playable piece against this piece, one square of the playable piece will be placed inside the placed piece, but it is still falling down and will fit the free space below the placed piece.
 
   Due to the time constraints, I was not able to fix this bug.
 
@@ -519,4 +520,4 @@ window.addEventListener('resize', ()=>{
 
 * Fix the side collision detection bug.
 * Make the game responsive.
-* Add a score board.
+* Add a scoreboard.
