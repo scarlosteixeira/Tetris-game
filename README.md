@@ -35,7 +35,7 @@ Solo project, to be completed within 2 weeks, split as it follows: <br>
 
 ## Technologies Used
 
-* HTML
+* HTML 5
 * CSS
 * JavaScript
 * VS Code
