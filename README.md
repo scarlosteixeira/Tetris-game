@@ -22,7 +22,7 @@ You can play here, my version of **[Tetris](https://scarlosteixeira.github.io/Te
 
 ## Getting Started
 
-The project can be accessed on **[my Git Hub profile on Tetris-game repository.](https://github.com/scarlosteixeira/Tetris-game)** <br>
+The project can be accessed on **[my GitHub profile on Tetris-game repository.](https://github.com/scarlosteixeira/Tetris-game)** <br>
 This project is open source and can be downloaded, used and modified by anyone, as far as credit is given.
 
 Solo project, to be completed within 2 weeks, split as it follows: <br>
@@ -35,11 +35,13 @@ Solo project, to be completed within 2 weeks, split as it follows: <br>
 
 ## Technologies Used
 
-* HTML 5
-* CSS
-* JavaScript
-* VS Code
-* Google Chrome
+* **[HTML 5](https://developer.mozilla.org/en-US/docs/Web/HTML)**
+* **[CSS](https://developer.mozilla.org/en-US/docs/Web/CSS)**
+* **[JavaScript](https://developer.mozilla.org/en-US/docs/Web/JavaScript)**
+* **[VS Code](https://code.visualstudio.com/docs)**
+* **[Google Chrome](https://www.google.com/chrome/)**
+* **[GitHub](https://docs.github.com/en)**
+* **[Excalidraw](https://github.com/excalidraw/excalidraw#documentation)**
 
 ## Brief 
 
@@ -105,10 +107,10 @@ for (let row = -2; row < 20; row++) {
   }
 }
 ```
-<br>
 
-* I created the basic variables for the game, such as the ``tedrominos`` objects, that contains all possible shapes for each piece, its name and colour. I worked on the pieces flow control variables and functions, where the variables are ``tedrominosArray``, ``nextPieces``, ``inGamePiece``, and ``piece`` and the functions are ``randomPiece()`` , ``setPieces()``, ``getPieces()``, ``pieceProps()``.
+* I created all the basic variables and functions that are required to represent the game pieces and to manage how they are generated. The variables contain essential information about the pieces, including their shape, colour, and name. The functions, on the other hand, govern the pieces' flow, such as how they are randomized, the next pieces to be used, the current in-game piece, and the properties of each piece. <br>In essence, these functions handle the creation and manipulation of objects and arrays that control how the pieces flow in the game. 
 
+You can see below an example of the variables and functions that control the pieces flow:
 ``` javascript
 //tetrominos obj
 const tetrominos = {
@@ -127,29 +129,11 @@ const tetrominos = {
       [0, 0, 1, 0],
       [0, 0, 1, 0]
     ],
-    shape2: [
-      [0, 0, 0, 0],
-      [0, 0, 0, 0],
-      [1, 1, 1, 1],
-      [0, 0, 0, 0]
-    ],
-    shape3: [
-      [0, 1, 0, 0],
-      [0, 1, 0, 0],
-      [0, 1, 0, 0],
-      [0, 1, 0, 0]
-    ],
     color: 'cyan',
     }, ...
     }
 
 const tetrominosArray = ['i', 'l', 'o', 's', 'z', 'j', 't'] // list all possible tetrominos options. This array contains the names of the tetrominos objects.
-
-const nextPieces = [] // array with random pieces ready to be used generated from tedrominos obj
-
-let inGamePiece = {} // piece from nextPiece array to be placed at game main field
-
-let piece = pieceProps() // in game piece, holds the piece properties and position
 
 // generate a random number to choose a piece on the tedrominos obj
 function randomPiece() {
@@ -185,27 +169,14 @@ function getPieces() {
   return inGamePiece
 }
 
-// creates the obj to be used by all functions on the game
-function pieceProps() {
-  // call the getPieces function to get the first piece from the nextPieces array
-  getPieces()
-  // positioning the piece on the first row (-2 index) and on the middle column
-  const row = -2 //start 2 rows above the row 0 "top row", creating the effect of the piece getting on the game board.
-  const col =
-    playableArray[0].length / 2 - Math.ceil(inGamePiece.shape0[0].length / 2) // get middle position of  the playable area, minus the offset of the middle piece length . This is to start to draw the piece in the middle of the screen.
-
-  // return the obj with the piece properties and the position
-  return {
-    name: inGamePiece.name,
-    row,
-    col,
-    shape: inGamePiece.shape0,
-    nextShape: inGamePiece.shape1,
-    color: inGamePiece.color,
-  }
-}
 ```
-* I had set the basic canvas elements and functions to draw the game on the canvas element. At this point I had the playable field drawn and the piece falling without any restrictions or collisions, it means that the piece was falling through the playable field and the walls.
+*  I implemented the basic canvas elements and functions to draw the game on the canvas element. At this stage, I was able to draw the playable field and the falling piece. However, I still needed to work on implementing restrictions and collisions to prevent the piece from falling through the playable field and walls.
+
+In this code snippet, I have created the canvas elements and defined the ```update()``` function, which is called by ```requestAnimationFrame``` to update the game state and draw the game on the canvas element.
+
+The ```requestAnimationFrame``` method is used to create an animation loop that constantly updates the canvas with the current game state. The ```ctx.clearRect()``` method is used to clear the canvas on each update. Additionally, ```drawField()``` and ```drawPiece()``` functions are called to draw the playable field and the falling game piece respectively.
+
+Lastly, the ```rAFId``` variable is assigned to ```requestAnimationFrame(update)``` to start the animation loop and begin the game.
 
 ``` javascript
 // canvas context
@@ -222,9 +193,11 @@ function update() { // update function to be called by requestAnimationFrame to 
 //! game start
 rAFId = requestAnimationFrame(update)
 ```
-The next 2 days I worked on the MVP (Minimum Viable Product) version of the game, which is the game with the basic functionalities, such as the restrictions and collisions, piece control and the line clear function.
+During the next two days, I focused on creating the MVP (Minimum Viable Product) version of the game. This version includes the essential functionalities, such as the restrictions and collisions, piece control, and line clearing function.
 
-* The restrictions for the piece movement in the field are made by functions that check for collisions with the walls and other pieces.
+* These functions enforce restrictions on the movement of game pieces within the playable field by checking for collisions with walls and other pieces. The restrictions are divided into two main groups: field restrictions, which comprise the side walls and bottom, and piece restrictions, which check for collisions with other pieces. Each function returns a Boolean value indicating whether a restriction or collision has occurred, and this value is then used to control the movement of the game piece.
+
+The following code snippet shows some of the functions that check for collisions with walls and other pieces.
 
 ``` javascript
 //restrictions
@@ -244,32 +217,6 @@ function restrictionLeft() {
   return isLeft
 }
 
-function restrictionRight() {
-  let isRight = false
-  piece.shape.forEach((row, y) => {
-    row.forEach((col, x) => {
-      //if the piece shape is not empty and the piece column is greater or equal to 9 (last column), sets isRight to true
-      if (piece.shape[y][x] && piece.col + x >= cols - 1) {
-        isRight = true
-      }
-    })
-  })
-  return isRight
-}
-
-function restrictionBottom() {
-  let isBottom = false
-  piece.shape.forEach((row, y) => {
-    row.forEach((col, x) => {
-      //if the piece shape is not empty and the piece row is greater or equal to 19 (last row), sets isBottom to true
-      if (piece.shape[y][x] && piece.row + y === rows - 1) {
-        isBottom = true
-      }
-    })
-  })
-  return isBottom
-}
-
 function pieceColision() {
   let isColision = false
   piece.shape.forEach((row, y) => {
@@ -286,7 +233,7 @@ function pieceColision() {
   return isColision
 }
 ```
-* The piece control is made by keydown events, which call the functions to move the piece accordingly. The piece is moved by changing the piece's position on the playable field array. 
+* The game's piece control system uses keydown events to move the piece accordingly. When a key is pressed, a corresponding function is called to move the piece in the desired direction by changing its position in the playable field array. For example, pressing the left arrow key moves the piece to the left, and pressing the right arrow key moves it to the right. The functions also check for restrictions, such as collision with other pieces or the sides of the field, before moving the piece. If a restriction is detected, the piece is moved back to its previous position. Additionally, the game allows the player to rotate the piece by pressing the up arrow key, as long as the rotation does not violate any restrictions.
 
 ``` javascript
 document.addEventListener('keydown', e => {
@@ -314,42 +261,15 @@ document.addEventListener('keydown', e => {
   }
 })
 ```
-* The line clear function checks for full lines in the playable field array, and if there is a full line, it clears it and moves all the pieces above it down one row.
 
-``` javascript
-function removeLine() {
-  // iterate over the playableArray
-  playableArray.forEach((row, y) => {
-    // checks every indexes of the playableArray row if is different from 0 (line is full)
-    if (playableArray[y].every(elem => elem !== 0)) {
+During the polishing process, I added several new features to the basic game, including a score and level system, a game over screen, a next piece preview, a pause function, and a restart button. It took me 4 days to implement these new functionalities and make the necessary adjustments to the existing functions. I also spent time fixing bugs that arose during the development process.
 
-      removedLines++
-      
-      removedLinesAcc++
-      // remove the line
-      playableArray.splice(y, 1)
-      // add a new line at the top of the playableArray
-      playableArray.unshift([0, 0, 0, 0, 0, 0, 0, 0, 0, 0])
-      isRemoved = true
-      levelUp()
-    }
-  })
-  return playableArray
-}
-```
-At this point I had the basic game working, but without any score or level system, neither a game over screen or next piece preview. I decided to add these features to the game, and also to add a pause function and a restart button.
-
-I came into this during the polishing process period, it takes me 4 days, as well as the bug fixing and adjustments on the functions to fit the new functionalities.
-
-* I used another instance of Canvas to draw the next piece preview.
+* In order to draw the next piece preview, I utilised a separate instance of Canvas. Specifically, I defined a new Canvas element called ```showNextPiece``` and obtained its context using the ```getContext()``` method. Then, I implemented the ```drawPiece()``` function to draw the preview of the next game piece. Inside this function, I used a nested loop to iterate through the cells of the next piece's shape and fill the cells with the piece's corresponding colour. Finally, I used some maths calculations to position the piece preview correctly on the Canvas.
 
 ``` javascript
   // * next piece preview
   const showNextPiece = document.querySelector('#next-piece')
   const ctxShowNextPiece = showNextPiece.getContext('2d')
-  // * canvas sizing
-  ctxShowNextPiece.canvas.width = window.innerWidth * 0.14
-  ctxShowNextPiece.canvas.height = ctxShowNextPiece.canvas.width / 1.37
 
 function drawPiece() {
   // draw the piece in the next piece preview
@@ -368,8 +288,7 @@ function drawPiece() {
   })
 }
 ```
-* I added a score system, which increases the score geometrically as the number of removed rows increases, and also a level system, which increases by 1 for every 10 lines cleared.
-
+* I added a score system that calculates the score geometrically based on the number of removed rows, and a level system that increases by 1 for every 10 lines cleared. The score is displayed on the screen using a DOM element. <br><br>To implement the score system, I defined a gameScore function that takes the number of removed lines and calculates the score using the formula num = Math.pow(removedLines, 2) * 100, where num is the score and removedLines is the number of removed lines. The function then adds the score to the score variable and displays it on the screen using a DOM element.<br><br> For the level system, I defined a levelUp function that checks if the isRemoved variable is set true by the removeLine function and if the number of removed lines accumulated in the removedLinesAcc variable is divisible by 10. If both conditions are true, the function increases the level variable by 1 and increases the speed of the falling pieces by decreasing the fallSpeed variable. The function then displays the updated level and the number of removed lines on the screen using DOM elements. The isRemoved variable is reset to false after each check to prevent multiple level increases for a single set of removed lines.
 ``` javascript
 
 // game score
@@ -411,7 +330,7 @@ function levelUp() {
   levelDisplay.innerHTML = level
 }
 ```
-* The game over screen is displayed when the piece is not able to fall anymore, it will replace the playable field array data with the game over message.
+* I display the game over screen when the falling piece can no longer move, and I replace the playable field array data with the game over message. To do this, I check if any piece exceeds the top row of the playableArray, it`s given by a logical test thats check if the row -1 of the playable array has any element different of 0, ```if (playableArray[-1].some((elem => elem !== 0)))```. If it does, I stop the game loop and set the isGameOver variable to true. I then create a game over array that contains the game over message in a colourful pattern. After that, I set the playableArray to the game over array, clear the canvas, and draw the game over screen using the drawField() function. Finally, I return the isGameOver variable.
 
 ``` javascript
 // sets the game over screen 
@@ -424,26 +343,7 @@ function gameOver() {
     isGameOver = true
     // game over array 
     const gameOverArray = [
-      [0, "red", "red", "red", "red", 0, 0, "blue", 0, 0],
-      [0, "red", 0, 0, 0, 0, "blue", 0, "blue", 0],
-      [0, "red", 0, "red", "red", 0, "blue", "blue", "blue", 0],
-      [0, "red", 0, 0, "red", 0, "blue", 0, "blue", 0],
-      [0, "red", "red", "red", "red", 0, "blue", 0, "blue", 0],
-      [0, "green", 0, 0, "green", 0, "orange", "orange", "orange", 0],
-      [0, "green", "green", "green", "green", 0, "orange", 0, 0, 0],
-      [0, "green", "green", "green", "green", 0, "orange", "orange", "orange", 0],
-      [0, "green", 0, 0, "green", 0, "orange", 0, 0, 0],
-      [0, "green", 0, 0, "green", 0, "orange", "orange", "orange", 0],
-      [0, "yellow", "yellow", "yellow", 0, "purple", 0, 0, "purple", 0],
-      [0, "yellow", 0, "yellow", 0, "purple", 0, 0, "purple", 0],
-      [0, "yellow", 0, "yellow", 0, "purple", 0, 0, "purple", 0],
-      [0, "yellow", 0, "yellow", 0, 0, "purple", "purple", 0, 0],
-      [0, "yellow", "yellow", "yellow", 0, 0, "purple", "purple", 0, 0],
-      [0, "orange", "orange", "orange", 0, 0, "cyan", "cyan", "cyan", 0],
-      [0, "orange", 0, 0, 0, 0, "cyan", 0, "cyan", 0],
-      [0, "orange", "orange", "orange", 0, 0, "cyan", "cyan", "cyan", 0],
-      [0, "orange", 0, 0, 0, 0, "cyan", "cyan", 0, 0],
-      [0, "orange", "orange", "orange", 0, 0, "cyan", 0, "cyan", 0]
+      // this is a bidimensional array that draws the game over message. Check it on my code.
     ]
     // set the playableArray to the game over array
     playableArray = gameOverArray
@@ -470,11 +370,13 @@ This is the finished game!
 
 #### Canvas 
 
-Using canvas for this project was a personal challenge that, until then, had not been addressed in the course.
+When working on my project, I faced a personal challenge of using canvas, which had not been addressed in the course. Due to limited time, I had to quickly learn how to use it and implement it in my project.
 
-I had to learn how to use Canvas, due to the limited time I had to work on the project, it became a challenge to learn how to use it and implement it in the project.
+I wrote the following code snippet to configure the canvas for the main and next piece screens. Firstly, I set the canvas width to about 20% of the user's screen size using ctx.canvas.width = window.innerWidth * 0.214 and the canvas height to twice the width using ctx.canvas.height = ctx.canvas.width * 2. Since the playable field has 10 columns and 20 rows, I also defined the canvas size for the next piece. I then calculated the cell size, which is the width and height in pixels for drawing each tetromino single square, by dividing the width of the canvas by 10.
 
-You can see below a code snippet from canvas configuration for main and next piece screen width, height, and piece sizes, also an event listener to auto resize them when screen size changes.
+To make the interface dynamic and responsive, I added an event listener to the window that listens for a resize event. When triggered, the canvas sizes are recalculated using the same formulas as before, and the cell size is updated accordingly.
+
+Overall, I successfully used canvas in my project, and with the help of this code snippet, I was able to configure the canvas to adapt to different screen sizes.
 
 ``` javascript
 // * canvas sizing
@@ -499,13 +401,17 @@ window.addEventListener('resize', ()=>{
 
 ## Wins
 
-  I used divide and conquer approach to solve the problem. I broke the problem into smaller problems and solved them one by one. That's why I splitted the project into functions that are responsible for a specific task, and use them where they are needed.
+* I employed a divide and conquer approach to tackle the problem, which involved breaking it down into smaller, more manageable sub-problems that I could solve one by one. To accomplish this, I split the project into functions that had specific responsibilities and utilized them as needed throughout the project.
+
+* Throughout the course, I learned a variety of JavaScript concepts that I was able to put into practice during this project. As a result, I feel much more confident in my ability to apply these concepts to real-world problems.
 
 
 ## Key Learnings/Takeaways
 
-  Basically I used all JavaScript concepts that I learned in the course, this project made me more confident in applying these concepts into real world problems.
-
+* I learned how to use canvas, but I still need to practise more to improve my skills.
+* I have a better understanding of how to use arrays and objects in JavaScript. 
+* I learned how to structure my HTML and CSS to get my elements to display the way I wanted them to.
+* I understand how to iterate over bidimensional arrays.
 
 ## Bugs
   Side collision detection between pieces is not working properly.
@@ -518,6 +424,6 @@ window.addEventListener('resize', ()=>{
 
 ## Future Improvements
 
-* Fix the side collision detection bug.
+* Fix the side collision detection between pieces bug.
 * Make the game responsive.
 * Add a scoreboard.
