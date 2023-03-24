@@ -52,7 +52,7 @@ Your app must:
 * **Design logic for winning** & **visually display which player won**
 * **Include separate HTML / CSS / JavaScript files**
 * Stick with **KISS (Keep It Simple Stupid)** and **DRY (Don't Repeat Yourself)** principles
-* Use **Javascript** for **DOM manipulation**
+* Use **JavaScript** for **DOM manipulation**
 * **Deploy your game online**, where the rest of the world can access it
 * Use **semantic markup** for HTML and CSS (adhere to best practices)
 
@@ -76,7 +76,7 @@ Your app must:
 ## Planning
 
 
-A digital whiteboard (Excalidraw) was used to sketch and plan the project; it gives a brief idea of the project's challenges and how these can be addressed such as the layout of the game and which programming resources are viable to solve mentioned problems. Eg. How do I track Tredominos position on the playable field?
+A digital whiteboard (Excalidraw) was used to sketch and plan the project; it gives a brief idea of the project's challenges and how these can be addressed such as the layout of the game and which programming resources are viable to solve mentioned problems. Eg. How do I track Tedrominos position on the playable field?
 How do I implement a collision between walls and pieces?
 
 
